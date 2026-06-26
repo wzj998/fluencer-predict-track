@@ -1,20 +1,20 @@
-# 投资大V合订本 / Fluencer Predict Track
+# 投资大V合订本
 
-A Codex skill for auditing public forecasts made by investment influencers.
+`fluencer-predict-track` 是一个 Codex skill，用于回看投资/财经大 V 的公开历史发言，筛选其中可验证的预测内容，并用公开数据验证预测准确性。
 
-It collects historical public answers or posts, filters verifiable predictions, checks whether the content was last edited before the predicted event, validates outcomes with external data, and produces a cited Markdown report.
+它适合用来做“合订本”式复盘：不是摘录观点，而是检查这些观点在当时是否早于事件发生、是否可量化验证、最终是否被数据支持。
 
-## What It Does
+## 功能
 
-- Uses a local Chrome/Chromium CDP endpoint to access pages that may require an interactive login.
-- Starts from a Zhihu answers page or a similar public answer list.
-- Extracts answer metadata: URL, title, creation time, last edit time, and text.
-- Selects at least 10 prediction-like answers when available, spread across different time periods.
-- Excludes predictions edited after the predicted event.
-- Verifies outcomes with public data sources such as central banks, regulators, exchanges, official statistics, FRED, BIS, World Bank, Yahoo Finance, Stooq, or Trading Economics.
-- Saves a Markdown report with sources and a judgment for each prediction.
+- 通过本机 Chrome/Chromium CDP 访问可能需要交互式登录的公开页面。
+- 从知乎回答页或类似公开回答列表开始采集。
+- 提取回答元数据：链接、标题、创建时间、最后编辑时间和正文。
+- 优先筛选至少 10 条预测性内容，并尽量覆盖不同时间跨度。
+- 排除最后编辑时间晚于预测事件的内容。
+- 使用公开数据源验证结果，例如央行、监管机构、交易所、官方统计、FRED、BIS、World Bank、Yahoo Finance、Stooq、Trading Economics 等。
+- 输出带来源、带判定的 Markdown 报告。
 
-## Skill Layout
+## 目录结构
 
 ```text
 skills/
@@ -26,44 +26,44 @@ skills/
       ensure-chrome-cdp.ps1
 ```
 
-## Install
+## 安装
 
-Copy `skills/fluencer-predict-track` into a Codex skills directory or keep this repository available to your agent.
+把 `skills/fluencer-predict-track` 复制到 Codex skills 目录，或让 Agent 能访问本仓库。
 
 ## Chrome CDP
 
-The skill expects a local Chrome/Chromium CDP endpoint.
+本 skill 需要一个本机 Chrome/Chromium CDP endpoint。
 
-Default:
+默认地址：
 
 ```text
 http://127.0.0.1:15166
 ```
 
-You can override it with:
+可以通过环境变量覆盖：
 
 ```powershell
 $env:FLUENCER_CDP_ENDPOINT = "http://127.0.0.1:9222"
 ```
 
-or by passing `-Endpoint` to the helper script:
+也可以运行脚本时传入 `-Endpoint`：
 
 ```powershell
 .\skills\fluencer-predict-track\scripts\ensure-chrome-cdp.ps1 -Endpoint "http://127.0.0.1:9222"
 ```
 
-The helper script only checks whether the endpoint is reachable and reports the owner process when the port is occupied. It does not read cookies, localStorage, browser profile files, passwords, or storage-state JSON.
+辅助脚本只检查 endpoint 是否可用，并在端口被占用时报告占用进程。它不会读取 cookie、localStorage、浏览器 profile、密码或 storage-state JSON。
 
-## Example Prompt
+## 示例请求
 
 ```text
-Use fluencer-predict-track to analyze https://www.zhihu.com/people/<user-token>/answers.
-Select at least 10 predictive answers across time, verify whether each prediction was accurate, and save a cited Markdown report.
+使用 fluencer-predict-track 分析 https://www.zhihu.com/people/<user-token>/answers。
+筛选至少 10 条不同时间跨度的预测性回答，验证准确性，并保存带来源的 Markdown 报告。
 ```
 
-## Report Output
+## 报告输出
 
-Reports should be saved under:
+报告默认保存到：
 
 ```text
 reports/fluencer-predict-track-<yyyy-mm-dd>-<target>.md

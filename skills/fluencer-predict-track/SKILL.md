@@ -1,87 +1,87 @@
 ---
 name: fluencer-predict-track
-description: Audit public investment-influencer forecasts from Zhihu answer pages or similar public answer lists by using a configurable local Chrome CDP endpoint, selecting prediction-like posts across time, checking that the post was last edited before the predicted event, validating outcomes with external data, and producing a cited Markdown report. Use when the user asks for 投资大V合订本, prediction tracking, forecast verification, or an investment influencer track-record report.
+description: 投资大V合订本：通过可配置的本机 Chrome CDP endpoint 抓取知乎回答页或类似公开回答列表，筛选不同时间跨度的预测性内容，检查最后编辑时间是否早于预测事件，用外部公开数据验证结果，并输出带来源的 Markdown 报告。适用于用户要求分析投资大V、财经博主、知乎用户或公开发言者的预测准确性、历史预测记录、forecast verification、prediction tracking 或合订本式复盘。
 ---
 
-# Fluencer Predict Track
+# 投资大V合订本
 
-## Core Contract
+## 核心约定
 
-Use a local Chrome/Chromium CDP endpoint to access public pages and interactive login sessions.
+使用本机 Chrome/Chromium CDP endpoint 访问公开页面和交互式登录会话。
 
-Default endpoint:
+默认 endpoint：
 
 ```text
 http://127.0.0.1:15166
 ```
 
-Override options:
+可覆盖方式：
 
-- Environment variable: `FLUENCER_CDP_ENDPOINT`
-- Script parameter: `-Endpoint`
-- User-provided endpoint in the task
+- 环境变量：`FLUENCER_CDP_ENDPOINT`
+- 脚本参数：`-Endpoint`
+- 用户在任务中明确提供 endpoint
 
-Run the helper script before browsing:
+开始浏览前先运行辅助脚本：
 
 ```powershell
 .\skills\fluencer-predict-track\scripts\ensure-chrome-cdp.ps1
 ```
 
-Do not read, export, print, or upload cookies, localStorage, browser profile files, passwords, or storage-state JSON. If a site requires login, ask the user to complete login in the browser window, then continue.
+不要读取、导出、打印或上传 cookie、localStorage、浏览器 profile、密码或 storage-state JSON。如果目标站点要求登录，让用户在浏览器窗口中完成登录，然后继续。
 
-## Workflow
+## 工作流程
 
-1. Confirm the target page and validation cutoff date. Use the task date unless the user provides another cutoff.
-2. Ensure CDP is reachable with `scripts/ensure-chrome-cdp.ps1`.
-3. Connect browser automation to the CDP endpoint.
-4. Open the target user's public answers page.
-5. Prefer first-party page APIs from inside the browser context over scroll scraping. For Zhihu, a typical endpoint is:
+1. 确认目标页面和验证截止日。除非用户另有指定，验证截止日使用任务当天。
+2. 使用 `scripts/ensure-chrome-cdp.ps1` 确认 CDP 可用。
+3. 通过浏览器自动化连接该 CDP endpoint。
+4. 打开目标用户的公开回答页或帖子列表。
+5. 优先在浏览器上下文中调用页面自己的接口，不要一开始就模拟滚动。知乎常见接口示例：
 
    ```text
    https://www.zhihu.com/api/v4/members/<url-token>/answers?offset=0&limit=20&sort_by=created&include=data[*].content,voteup_count,comment_count,created_time,updated_time,question
    ```
 
-6. Collect answer/post URL, title, created time, final updated time, and plain text.
-7. Build a candidate pool of prediction-like content. Prefer items with:
-   - Explicit future windows: dates, years, quarters, "next year", "by year end", "within months".
-   - Verifiable outcomes: prices, index levels, policy events, macro data, company or industry events.
-   - Clear direction or threshold: rise/fall, break/not break, happen/not happen, outperform/underperform.
-8. Exclude items where:
-   - The final edit time is after the predicted event or validation window.
-   - The prediction is too vague to verify without inventing criteria.
-   - The claim depends mainly on unreadable images.
-   - The predicted event is after the cutoff date, unless the user wants `尚未到期` items listed.
-9. Select at least 10 verifiable items unless fewer exist. Spread the sample across time instead of taking only recent posts.
-10. Validate each selected prediction with external sources. Prefer official or primary data first:
-    - Official statistics, central banks, regulators, exchanges, company filings.
-    - FRED, BIS, World Bank, IMF, NBS, Federal Reserve, CSRC/CFFEX.
-    - Yahoo Finance, Stooq, Trading Economics, or other cited market data when official data is unavailable.
-11. Save a Markdown report under:
+6. 采集回答或帖子的链接、标题、创建时间、最后编辑时间和纯文本正文。
+7. 建立预测候选池。优先选择具备下列特征的内容：
+   - 有明确未来窗口：日期、年份、季度、明年、年底前、未来几个月等。
+   - 有可验证结果：价格、指数点位、政策事件、宏观数据、公司或行业事件。
+   - 有清晰方向或阈值：上涨/下跌、突破/不突破、发生/不发生、跑赢/跑输。
+8. 排除下列内容：
+   - 最后编辑时间晚于预测事件或验证窗口。
+   - 预测过于模糊，必须发明口径才能验证。
+   - 关键判断主要依赖无法可靠读取的图片。
+   - 预测目标日在验证截止日之后。除非用户要求列出，否则这类内容只标记为 `尚未到期`，不计入准确率。
+9. 除非可验证候选不足，否则至少选择 10 条。样本要尽量覆盖不同年份或时间段，不要只选最近内容。
+10. 使用外部公开来源验证每条预测。优先级：
+    - 官方统计、央行、监管机构、交易所、公司公告和财报。
+    - FRED、BIS、World Bank、IMF、NBS、Federal Reserve、CSRC/CFFEX。
+    - 官方数据不可得时，可使用 Yahoo Finance、Stooq、Trading Economics 或其他可引用行情数据。
+11. 保存 Markdown 报告：
 
     ```text
     reports/fluencer-predict-track-<yyyy-mm-dd>-<target>.md
     ```
 
-12. Summarize the result in the final response and link the saved report path.
+12. 最终回复中总结结论，并给出本地报告路径。
 
-## Judgment Rubric
+## 判定口径
 
-- `准确`: Direction and timing are materially correct.
-- `部分准确`: Direction is right but timing, magnitude, or scope is meaningfully off.
-- `不准确`: Direction, threshold, or event call is materially wrong.
-- `无法验证`: Public data is insufficient or the claim lacks measurable criteria.
-- `尚未到期`: The prediction target date is after the validation cutoff.
+- `准确`：方向和时间窗口都基本正确。
+- `部分准确`：方向正确，但时间、幅度或适用范围有明显偏差。
+- `不准确`：方向、阈值或事件判断明显错误。
+- `无法验证`：公开数据不足，或原预测缺少可量化口径。
+- `尚未到期`：预测目标日在验证截止日之后。
 
-State clearly that sample scores are not statistically valid hit rates unless the user asks for a full audit and the full corpus is actually processed.
+如果给出分数或命中率，必须说明这是样本得分，不是统计意义上的完整胜率，除非用户明确要求并且确实处理了完整语料。
 
-## Report Shape
+## 报告结构
 
-Include:
+报告应包含：
 
-- Scope, target URL, collection date, validation cutoff date.
-- Collection method, CDP endpoint, answer count, and limitations.
-- Selection and exclusion rules.
-- Table: answer date, final edit date, answer link, prediction paraphrase, validation evidence, sources, and judgment.
-- Synthesis: strengths, weaknesses, recurring error modes, and caveats.
+- 任务范围、目标 URL、采集日期、验证截止日。
+- 采集方式、CDP endpoint、采集到的回答数量和限制。
+- 筛选规则和排除规则。
+- 表格：回答日期、最后编辑日期、回答链接、预测内容概括、验证数据、来源、判定。
+- 综合分析：强项、弱项、常见误判模式和注意事项。
 
-Paraphrase answer text. Do not quote long passages from Zhihu or other copyrighted pages.
+正文要概括和转述回答内容。不要长篇引用知乎或其他受版权保护页面的原文。
