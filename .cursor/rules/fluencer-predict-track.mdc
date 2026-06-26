@@ -1,0 +1,53 @@
+---
+description: 投资大V合订本：追踪投资/财经大V公开历史预测，并用外部数据验证准确性。
+globs:
+alwaysApply: false
+---
+
+# 投资大V合订本
+
+当用户要求分析投资大V、财经博主、知乎用户或公开发言者的预测准确性、历史预测记录、forecast verification、prediction tracking 或合订本式复盘时，使用本规则。
+
+## CDP
+
+使用本机 Chrome/Chromium CDP endpoint，默认：
+
+```text
+http://127.0.0.1:15166
+```
+
+可用环境变量 `FLUENCER_CDP_ENDPOINT` 或用户明确提供的 endpoint 覆盖。
+
+开始前运行：
+
+```powershell
+.\skills\fluencer-predict-track\scripts\ensure-chrome-cdp.ps1
+```
+
+不要读取、导出、打印或上传 cookie、localStorage、浏览器 profile、密码或 storage-state JSON。如果目标站点要求登录，让用户在浏览器窗口中完成登录。
+
+## 流程
+
+1. 确认目标页面和验证截止日。默认使用任务当天。
+2. 连接 CDP 并打开目标用户公开回答页或帖子列表。
+3. 优先在浏览器上下文中调用页面自己的接口，不要一开始就模拟滚动。
+4. 采集链接、标题、创建时间、最后编辑时间和纯文本正文。
+5. 筛选有明确未来时间窗口、可验证结果、清晰方向或阈值的预测内容。
+6. 排除最后编辑时间晚于预测事件、预测过于模糊、关键判断主要依赖不可读图片、或尚未到期且用户未要求列出的内容。
+7. 除非可验证候选不足，否则至少选择 10 条，并尽量覆盖不同年份或时间段。
+8. 使用官方统计、央行、监管机构、交易所、公司公告、FRED、BIS、World Bank、IMF、NBS、Federal Reserve、CSRC/CFFEX 等来源验证；官方数据不可得时再使用 Yahoo Finance、Stooq、Trading Economics 等可引用行情源。
+9. 保存 Markdown 报告到：
+
+   ```text
+   reports/fluencer-predict-track-<yyyy-mm-dd>-<target>.md
+   ```
+
+## 判定
+
+- `准确`：方向和时间窗口都基本正确。
+- `部分准确`：方向正确，但时间、幅度或适用范围有明显偏差。
+- `不准确`：方向、阈值或事件判断明显错误。
+- `无法验证`：公开数据不足，或原预测缺少可量化口径。
+- `尚未到期`：预测目标日在验证截止日之后。
+
+报告正文要概括和转述回答内容，不要长篇引用知乎或其他受版权保护页面原文。

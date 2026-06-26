@@ -30,6 +30,30 @@ skills/
 
 把 `skills/fluencer-predict-track` 复制到 Codex skills 目录，或让 Agent 能访问本仓库。
 
+### Codex
+
+使用：
+
+```text
+skills/fluencer-predict-track/
+```
+
+### Claude Code
+
+使用：
+
+```text
+.claude/skills/fluencer-predict-track/
+```
+
+### Cursor
+
+使用：
+
+```text
+.cursor/rules/fluencer-predict-track.mdc
+```
+
 ## Chrome CDP
 
 本 skill 需要一个本机 Chrome/Chromium CDP endpoint。
