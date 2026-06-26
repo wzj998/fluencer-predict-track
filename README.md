@@ -1,6 +1,6 @@
 # 投资大V合订本
 
-`fluencer-predict-track` 是一个 Codex skill，用于回看投资/财经大 V 的公开历史发言，筛选其中可验证的预测内容，并用公开数据验证预测准确性。
+`fluencer-predict-track` 是一个可供 Codex、Claude Code 和 Cursor 使用的投资预测复盘 skill/rule，用于回看投资/财经大 V 的公开历史发言，筛选其中可验证的预测内容，并用公开数据验证预测准确性。
 
 它适合用来做“合订本”式复盘：不是摘录观点，而是检查这些观点在当时是否早于事件发生、是否可量化验证、最终是否被数据支持。
 
@@ -18,6 +18,13 @@
 ## 目录结构
 
 ```text
+.claude/
+  skills/
+    fluencer-predict-track/
+      SKILL.md
+.cursor/
+  rules/
+    fluencer-predict-track.mdc
 skills/
   fluencer-predict-track/
     SKILL.md
@@ -29,11 +36,11 @@ skills/
 
 ## 安装
 
-把 `skills/fluencer-predict-track` 复制到 Codex skills 目录，或让 Agent 能访问本仓库。
+仓库内已经同步维护三种 Agent 入口：
 
 ### Codex
 
-使用：
+使用 Codex skill：
 
 ```text
 skills/fluencer-predict-track/
@@ -41,7 +48,7 @@ skills/fluencer-predict-track/
 
 ### Claude Code
 
-使用：
+使用 Claude Code skill：
 
 ```text
 .claude/skills/fluencer-predict-track/
@@ -49,11 +56,13 @@ skills/fluencer-predict-track/
 
 ### Cursor
 
-使用：
+使用 Cursor rule：
 
 ```text
 .cursor/rules/fluencer-predict-track.mdc
 ```
+
+三份入口应保持同一套核心规则：每个目标至少 20 条预测样本、多目标分别计数、最后编辑时间检查、外部数据验证，以及 Markdown 报告中的充分结果总结。
 
 ## Chrome CDP
 
