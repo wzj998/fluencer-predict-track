@@ -1,0 +1,4 @@
+interface:
+  display_name: "投资大V合订本"
+  short_description: "追踪投资大V历史预测并用公开数据验证准确性"
+  default_prompt: "分析一个投资大V的公开回答或帖子列表，筛选预测性内容，用外部数据验证准确性，并输出带来源的 Markdown 报告。"
