@@ -1,4 +1,4 @@
 interface:
   display_name: "知乎发布稿改写"
   short_description: "把内部合订本 Markdown 改写成知乎公开稿，并可预览到知乎编辑器"
-  default_prompt: "将本地合订本 Markdown 改写成知乎发布版，开篇介绍 GitHub 项目地址，去掉本地路径、具体 CDP 地址和内部迭代痕迹；先把 Markdown 和图片发给我，需要预览时用富文本方式粘贴到知乎编辑器，只有我明确确认后才发布。"
+  default_prompt: "将本地合订本 Markdown 改写成知乎发布版，开篇介绍 GitHub 项目地址，去掉本地路径、具体 CDP 地址和内部迭代痕迹；如有回测信号表，后面紧跟信号准确表；先把 Markdown 和图片发给我，需要预览时用富文本方式粘贴到知乎编辑器，只有我明确确认后才发布。"

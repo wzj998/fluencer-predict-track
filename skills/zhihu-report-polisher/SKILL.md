@@ -35,6 +35,7 @@ The Zhihu draft is a polished public article, not an engineering report.
 
 - Keep the useful reader-facing content: headline, target account, sample size, verification cutoff, qualitative conclusions, backtest result, backtest assumptions, limitations, tables needed to understand the backtest, and external sources.
 - If backtest metrics are included, preserve position usage information such as average exposure, maximum exposure, average cash ratio, and cash drag. State clearly that annualized return and Sharpe are affected by position usage: accounts with more frequent tradable signals may become more fully invested, while sparse-signal accounts may keep more cash.
+- If a backtest signal table is included, place a `信号准确表` immediately after it. This table should map the sampled public predictions to their qualitative verification result, using public evidence and labels such as `准确`, `部分准确`, `不准确`, `尚未到期`, or `不计分`.
 - Remove or rewrite implementation details: local file paths, candidate-pool file names, internal report paths, exact CDP endpoint URLs, cookies, browser state, script names, zip/package names, and workspace-specific paths.
 - It is acceptable to say "通过本地 Chrome CDP 采集知乎公开回答页", but do not include a concrete local URL such as `127.0.0.1:15166`.
 - Do not expose iteration wording such as "上一版", "旧版", "新版", "重新跑", "rerun", or "candidate file". Use "本次样本", "定性复盘", "回测结果", and "预测样本".
@@ -75,10 +76,11 @@ Use this order unless the user gives a different structure:
 5. Backtest result, if present.
 6. Qualitative review: which areas were more accurate, which were weaker, common error patterns, traceability risk, and pre/post-event caveats.
 7. Backtest assumptions and limitations.
-8. Backtest tables or compact signal tables, if present.
-9. External sources.
+8. Backtest signal table, if present.
+9. `信号准确表`, immediately after the backtest signal table when both are available.
+10. External sources.
 
-Do not include a full prediction-review table when the user has asked not to include it. Prefer compact tables that support the public article's argument.
+Name the qualitative verification table `信号准确表` rather than `预测复盘表`. If the user explicitly asks to omit it, omit it; otherwise include it after the backtest signal table when available.
 
 ## Public Draft Checklist
 
