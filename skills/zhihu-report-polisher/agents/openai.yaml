@@ -1,0 +1,4 @@
+interface:
+  display_name: "知乎发布稿改写"
+  short_description: "把内部合订本 Markdown 改写成适合知乎发布的公开文章草稿"
+  default_prompt: "将本地合订本 Markdown 改写成知乎发布版，开篇介绍 GitHub 项目地址，去掉本地路径、具体 CDP 地址和内部迭代痕迹，只生成本地草稿不发布。"
