@@ -1,17 +1,19 @@
 ---
 name: zhihu-report-polisher
-description: Convert an internal influencer prediction report Markdown into a Zhihu-ready public article draft. Use when the user wants to publish or prepare a consolidated report for Zhihu, especially when the source report contains local paths, Chrome CDP details, report file names, iteration wording, or engineering notes that should not appear in a public article.
+description: Convert an internal influencer prediction report Markdown into a Zhihu-ready public article draft, preview it in Zhihu's editor, or prepare a publish flow. Use when the user wants to publish or prepare a consolidated report for Zhihu, especially when the source report contains local paths, Chrome CDP details, report file names, iteration wording, or engineering notes that should not appear in a public article.
 ---
 
 # Zhihu Report Polisher
 
-Use this skill to turn a local investment-prediction report Markdown into a reader-facing Zhihu article draft. Do not log in to Zhihu or publish anything unless the user explicitly asks in a separate step.
+Use this skill to turn a local investment-prediction report Markdown into a reader-facing Zhihu article draft, and optionally paste it into Zhihu's article editor for preview. Do not publish anything unless the user explicitly confirms publishing after reviewing the generated draft and editor preview.
 
 ## Output
 
 - Write the public draft under `zhihu/`.
 - Name it from the source file stem, ending in `-zhihu.md`.
 - `zhihu/` is ignored by git; do not force-add generated drafts unless the user explicitly asks.
+- If the draft references local images, copy them into `zhihu/assets/` and use relative Markdown image links.
+- Before any publish-related browser step, send the generated Markdown file and every referenced image to the user through the available IM/file tools so they can review the exact content.
 
 ## Required Opening
 
@@ -39,6 +41,28 @@ The Zhihu draft is a polished public article, not an engineering report.
 - If the source report contains a net-value/equity-curve image, copy the image into `zhihu/assets/` and reference it with Markdown image syntax, for example `![净值曲线](assets/<chart>.png)`. Do not replace generated charts with vague placeholders such as "此处插入".
 - Keep public URLs that support verification, including the GitHub project URL, Zhihu answer links, and external data/source URLs.
 - Keep financial disclaimers concise: include that the article is a sample review and not investment advice.
+
+## Zhihu Editor Preview
+
+When the user asks to view, paste, preview, or prepare the article in Zhihu's writing page:
+
+- Use the user's existing Chrome session only when needed for Zhihu login state.
+- Before opening or using the Zhihu write page, close other open Zhihu tabs so there is only one active Zhihu article/editor tab to avoid editing the wrong draft.
+- Prefer a VSCode-preview-equivalent rich-text paste flow over Zhihu's document import:
+  1. Render the generated Markdown to HTML locally.
+  2. Put both `text/html` and `text/plain` on the paste payload, or dispatch an equivalent paste event into Zhihu's editor.
+  3. Preserve headings, lists, links, and tables as HTML so Zhihu receives formatted content instead of raw Markdown markers such as `##`.
+  4. Keep tables as real HTML tables so Zhihu can convert them into Zhihu editor tables.
+- For images, use the stable path: keep image references in the Markdown for review, and during the editor preview let Zhihu receive/upload the rendered image. If that fails, upload the image separately with Zhihu's image button at the intended position.
+- After pasting, verify the editor state before reporting success: headings should not show raw `#`/`##`, tables should be editor tables, and images should either display or have been uploaded to a Zhihu image URL.
+- Send a screenshot of the editor preview to the user when requested or when preparing for publish.
+
+## Publishing Safety
+
+- Never click Zhihu's final publish button unless the user explicitly says to publish after receiving/reviewing the Markdown, images, and editor preview.
+- A request to generate, paste, import, preview, or prepare the article is not publish approval.
+- If the user asks to publish without having reviewed the latest generated files and preview in the same workflow, first send the Markdown/images and preview screenshot, then wait for explicit confirmation.
+- Do not change publish settings such as cover, topics, source declaration, column, or question submission unless the user asks for those exact changes.
 
 ## Recommended Article Structure
 
