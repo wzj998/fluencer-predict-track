@@ -35,6 +35,7 @@ The Zhihu draft is a polished public article, not an engineering report.
 
 - Keep the useful reader-facing content: headline, target account, sample size, verification cutoff, qualitative conclusions, backtest result, backtest assumptions, limitations, tables needed to understand the backtest, and external sources.
 - If backtest metrics are included, preserve position usage information such as average exposure, maximum exposure, average cash ratio, and cash drag. State clearly that annualized return and Sharpe are affected by position usage: accounts with more frequent tradable signals may become more fully invested, while sparse-signal accounts may keep more cash.
+- In `结论先行`, include profit/loss contribution analysis when a backtest signal table has per-operation contribution. Summarize the main positive and negative contributors by ticker, sector/theme, and operation type, then translate them into reader-facing language such as which areas were more accurate and which areas dragged returns. Do not leave the opening conclusion as only total return, win rate, CAGR, or Sharpe.
 - If a backtest signal table is included, place a `信号准确表` immediately after it. This table should map the sampled public predictions to their qualitative verification result, using public evidence and labels such as `准确`, `部分准确`, `不准确`, `尚未到期`, or `不计分`.
 - Remove or rewrite implementation details: local file paths, candidate-pool file names, internal report paths, exact CDP endpoint URLs, cookies, browser state, script names, zip/package names, and workspace-specific paths.
 - It is acceptable to say "通过本地 Chrome CDP 采集知乎公开回答页", but do not include a concrete local URL such as `127.0.0.1:15166`.
@@ -73,7 +74,7 @@ Use this order unless the user gives a different structure:
 2. Analysis object.
 3. Project introduction and GitHub link.
 4. `结论先行`.
-5. Backtest result, if present.
+5. Backtest result, if present; include the main profit and loss contributors in or immediately after `结论先行`.
 6. Qualitative review: which areas were more accurate, which were weaker, common error patterns, traceability risk, and pre/post-event caveats.
 7. Backtest assumptions and limitations.
 8. Backtest signal table, if present.
